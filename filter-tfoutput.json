@@ -1,0 +1,9 @@
+#!/bin/bash
+set -euo pipefail
+
+export CONSUMER_NAME="consumer2"
+export CONSUMED_VARS='[ "azs", "region","banana" ]'
+
+cat tfoutput.json | jq "with_entries(.value |= {type: .type}) 
+| with_entries(select([.key] | inside(
+  $CONSUMED_VARS)))" > "tfoutput-filtered-$CONSUMER_NAME.json"
