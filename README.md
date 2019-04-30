@@ -3,9 +3,19 @@
 
 Generates jsonschema for validating that certain items are present in terraform outputs.
 
-## How to use
+## Dependencies
 
+bash, jq, jsonschema, terraform (and applied config with outputs)
 
+## Getting Started
+
+The easiest way to create a contract is using a pre-existing terraform state. To generate a contract:
+1. Fetch the terraform outputs into a file called *tfoutput.json*: `terraform output -json > tfoutput.json`
+1. Retrieve the outputs that will be passed into your consumer's config: e.g. `CONSUMED_OUTPUTS="$(terraform-outputs-in-tile-config.sh -o tfoutput.json -c tile.yml)"` to retrieve matching config for an Ops Manager Tile. Since this is an automated, if any variables in the tile config don't exactly match, they will be missed.  
+1. Validate that the desired outputs are set in the output (*CONSUMED_OUTPUTS*), formatted as a JSON list
+1. Run `create-tfoutput-jsonschema.sh -o "$CONSUMED_OUTPUTS"  > schema-$CONSUMER.json ` to create the contract in the form of a JSON schema. you should define `$CONSUMER` as a name to identify the purpose of the config file (*tile.yml*) that you used in a previous step.
+
+For subsequent terraform runs, you can check the contract is adhered to by running a standard JSON schema validation tool e.g. `jsonschema -i schema.json schema-$CONSUMER.json`
 
 ## Why?
 
