@@ -16,7 +16,7 @@ params:
   CONTRACTS_FOLDER:
   # path relative to data input
   # defaults to file produced by terraform resource
-  JSON_DATA_FILE: data/metadata
+  JSON_DATA_FILE: metadata
   SCHEMA_FILE_PATTERN: "*.json"
 
 run:
@@ -26,11 +26,11 @@ run:
   - |
     set -euo pipefail
 
-    if [ -z "$(ls -A $CONTRACTS_FOLDER/$SCHEMA_FILE_PATTERN)" ]; then
+    if [ -z "$(ls -A schemas/$CONTRACTS_FOLDER/$SCHEMA_FILE_PATTERN)" ]; then
       echo "WARNING: no schemas found"
     fi
 
-    for contract in $CONTRACTS_FOLDER/$SCHEMA_FILE_PATTERN; do
+    for contract in schemas/$CONTRACTS_FOLDER/$SCHEMA_FILE_PATTERN; do
       echo "Validating against JSON schema: $contract"
-      ajv -s $contract -d $JSON_DATA_FILE --all-errors
+      ajv -s $contract -d data/$JSON_DATA_FILE --all-errors
     done
