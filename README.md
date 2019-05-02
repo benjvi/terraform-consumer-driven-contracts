@@ -33,7 +33,7 @@ Since we are relying on fields being present in a JSON, there is a standard way 
 
 The fundamental idea of consumer driven contracts is that each consumer defines its own contract, covering only the parts of the interface that it uses. For different consumers these contracts may be different, and summed across all consumers this may not cover the whole of the API. So the producer knows which fields are not actively being used by consumers, which can be changed at will. Fields that are in use but which should be changed require a migration strategy (e.g. adding the new field and asking clients to switch some time before deleting the old field).
 
-## Extentions
+## Extensions
 
 ### Triggering
 
