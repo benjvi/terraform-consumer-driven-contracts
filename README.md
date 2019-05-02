@@ -7,7 +7,7 @@ Generates jsonschema for validating that certain items are present in terraform 
 
 bash, jq, jsonschema, terraform (and applied config with outputs)
 
-## Getting Started
+## How To Use 
 
 The easiest way to create a contract is using a pre-existing terraform state. To generate a contract:
 1. Fetch the terraform outputs into a file called *tfoutput.json*: `terraform output -json > tfoutput.json`
@@ -16,6 +16,8 @@ The easiest way to create a contract is using a pre-existing terraform state. To
 1. Run `create-tfoutput-jsonschema.sh -o "$CONSUMED_OUTPUTS"  > schema-$CONSUMER.json ` to create the contract in the form of a JSON schema. you should define `$CONSUMER` as a name to identify the purpose of the config file (*tile.yml*) that you used in a previous step.
 
 For subsequent terraform runs, you can check the contract is adhered to by running a standard JSON schema validation tool e.g. `jsonschema -i schema.json schema-$CONSUMER.json`
+
+If you are using the Concourse Terraform Resource, this deosn't publish Terraform outputs in their raw form, you should use the alternative schema creation script `create-tfconcourse-jsonschema.sh` for schemas to test the output.
 
 ## Why?
 
@@ -31,5 +33,9 @@ Since we are relying on fields being present in a JSON, there is a standard way 
 
 The fundamental idea of consumer driven contracts is that each consumer defines its own contract, covering only the parts of the interface that it uses. For different consumers these contracts may be different, and summed across all consumers this may not cover the whole of the API. So the producer knows which fields are not actively being used by consumers, which can be changed at will. Fields that are in use but which should be changed require a migration strategy (e.g. adding the new field and asking clients to switch some time before deleting the old field).
 
+## Extentions
 
+### Triggering
+
+With schema we can show when our deployment automation (consuming terraform values) needs updating, it does not take care of when the values change and we just need to trigger again. We could also use the consumer contracts to tell the consumers precisely when the values they consume have been updated
 
