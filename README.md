@@ -41,3 +41,6 @@ The fundamental idea of consumer driven contracts is that each consumer defines 
 
 With schema we can show when our deployment automation (consuming Terraform values) needs updating, it does not take care of when the values change and we just need to trigger again. We could also use the consumer contracts to tell the consumers precisely when the values they consume have been updated
 
+### Validate Before Apply
+
+At the moment, this needs to be run after apply, as Terraform outputs are generated from the `tfstate` file. This means that we only get the failure after a breaking change has already been made (hopefully only in sandbox). It should be possible, although more cumbersome, to test the continued presence of the required outputs by parsing the Terraform HCL config files.
